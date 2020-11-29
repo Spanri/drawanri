@@ -2,19 +2,18 @@
   <div id="app" class="app">
     <h1 class="app__title">Drawanri = Draw + Spanri</h1>
 
-    <div>
-      <label>Color</label>
-      <input type="color" id="head" v-model="color" name="head" />
-      <input v-model="color" />
-    </div>
+    <Brush v-model="pointWidth" />
+    <Color v-model="color" />
 
     <br />
 
-    <div>
-      <label>Width</label>
-      <input type="range" min="0" max="30" step="1" v-model="pointWidth" />
-      <input v-model="pointWidth" type="number" />
-    </div>
+    <button
+      class="app__color-picker"
+      @click="toggleColor()"
+      :active="isPickering"
+    >
+      Color picker
+    </button>
 
     <br />
 
@@ -32,7 +31,12 @@
 <script lang="ts">
 import { Component, Watch, Vue } from "vue-property-decorator";
 
-@Component({ components: {} })
+@Component({
+  components: {
+    Brush: () => import("./components/Brush.vue"),
+    Color: () => import("./components/Color.vue"),
+  },
+})
 export default class App extends Vue {
   private ctx: any | null = null;
 
@@ -40,6 +44,7 @@ export default class App extends Vue {
   private pointWidth = 5 as number;
   private lines: { x: number; y: number; pointWidth: number }[][] = [];
   private isDrawing = false as boolean;
+  private isPickering = false as boolean;
 
   @Watch("color")
   colorChanged(newColor: string) {
@@ -56,6 +61,7 @@ export default class App extends Vue {
       canvas.addEventListener("mousedown", this.setPointStart);
       canvas.addEventListener("mouseup", this.setPointEnd);
       canvas.addEventListener("mousemove", this.drawPoint);
+      canvas.addEventListener("click", this.getColor);
 
       this.ctx = canvas!.getContext("2d");
       this.ctx.fillStyle = "white";
@@ -104,6 +110,18 @@ export default class App extends Vue {
         this.pointWidth,
         this.pointWidth
       );
+    }
+  }
+
+  private toggleColor() {
+    this.isPickering = !this.isPickering;
+  }
+
+  private getColor(event: any) {
+    if (this.isPickering) {
+      const data = this.ctx.getImageData(event.offsetX, event.offsetY, 1, 1)
+        .data;
+      this.color = data;
     }
   }
 
@@ -170,6 +188,12 @@ $white: white;
   &__title {
     margin: 0;
     padding: 30px;
+  }
+
+  &__color-picker {
+    &:active {
+      background: $pink;
+    }
   }
 
   &__canvas {
