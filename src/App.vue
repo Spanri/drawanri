@@ -1,11 +1,6 @@
 <template>
   <div id="app" class="app">
-    <h1 class="app__title">Drawanri = Draw + Spanri</h1>
-
-    <Brush v-model="pointWidth" />
-    <Color v-model="color" />
-
-    <br />
+    <Header />
 
     <button
       class="app__color-picker"
@@ -33,8 +28,7 @@ import { Component, Watch, Vue } from "vue-property-decorator";
 
 @Component({
   components: {
-    Brush: () => import("./components/Brush.vue"),
-    Color: () => import("./components/Color.vue"),
+    Header: () => import("./components/Header/Index.vue"),
   },
 })
 export default class App extends Vue {
@@ -159,11 +153,11 @@ export default class App extends Vue {
 $blue-dark: #284161;
 
 html {
-  height: 100%;
+  min-height: 100%;
 }
 
 body {
-  height: 100%;
+  min-height: 100%;
   margin: 0;
 }
 
@@ -174,16 +168,13 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
 }
 </style>
 
 <style lang="scss" scoped>
-$pink: #fae3e7;
-$white: white;
-
 .app {
-  background: $pink;
+  background: $gray;
 
   &__title {
     margin: 0;
@@ -192,7 +183,7 @@ $white: white;
 
   &__color-picker {
     &:active {
-      background: $pink;
+      background: $gray;
     }
   }
 

@@ -12,7 +12,7 @@ import { Component, Prop, Emit, Model, Vue } from "vue-property-decorator";
 
 @Component({
   components: {
-    Input: () => import("./_Input.vue"),
+    Input: () => import("../_Input.vue"),
   },
 })
 export default class Color extends Vue {
